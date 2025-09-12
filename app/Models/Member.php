@@ -75,6 +75,11 @@ class Member extends Model
      */
     public static function isValidSouthAfricanId($idNumber)
     {
+        // Handle null/empty values
+        if (empty($idNumber)) {
+            return false;
+        }
+
         // Remove any spaces or special characters and convert to string
         $idNumber = (string) preg_replace('/[^0-9]/', '', $idNumber);
 
@@ -107,20 +112,21 @@ class Member extends Model
             return false;
         }
 
-        // Validate using Luhn algorithm (modified for SA ID)
+        // Apply Luhn algorithm for South African ID numbers
         $sum = 0;
         for ($i = 0; $i < 12; $i++) {
             $digit = (int) $idNumber[$i];
-            if ($i % 2 === 0) {
-                $sum += $digit;
-            } else {
-                $doubled = $digit * 2;
-                $sum += ($doubled > 9) ? $doubled - 9 : $doubled;
+            if ($i % 2 === 1) { // Odd positions (1, 3, 5, 7, 9, 11) - 0-indexed
+                $digit *= 2;
+                if ($digit > 9) {
+                    $digit = $digit - 9;
+                }
             }
+            $sum += $digit;
         }
 
         $checkDigit = (10 - ($sum % 10)) % 10;
-        return $checkDigit == $idNumber[12];
+        return $checkDigit == (int) $idNumber[12];
     }
 
     /**
@@ -159,4 +165,10 @@ class Member extends Model
     {
         return $query->where('cellphone', 'like', '%' . $cellphone . '%');
     }
+
+    public static function search($searchTerm)
+    {
+        return self::searchByIdOrMember($searchTerm);
+    }
+
 }

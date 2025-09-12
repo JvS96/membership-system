@@ -60,8 +60,15 @@ class MemberFactory extends Factory
         // Race digit (usually 8 or 9, but can be 0-9)
         $raceDigit = fake()->numberBetween(0, 9);
 
-        // First 12 digits
-        $idWithoutCheck = $year . $month . $day . $genderDigit . $sequenceDigit . $citizenshipDigit . $raceDigit;
+        // First 12 digits - ensure proper formatting with leading zeros
+        $idWithoutCheck = sprintf('%02d%02d%02d%d%d%d%d',
+            $year, $month, $day, $genderDigit, $sequenceDigit, $citizenshipDigit, $raceDigit);
+
+        // Ensure we have exactly 12 digits
+        if (strlen($idWithoutCheck) !== 12) {
+            // Fallback to ensure 12 digits
+            $idWithoutCheck = str_pad($idWithoutCheck, 12, '0', STR_PAD_RIGHT);
+        }
 
         // Calculate check digit using Luhn algorithm
         $sum = 0;
