@@ -5,7 +5,16 @@
 use App\Models\Member;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+
+uses(RefreshDatabase::class); // This can be removed if you don't want to see the test data
+
+/*
+ *
+ * Keep in mind that if you run the test after you seeded the DB then the DB will be empty.
+ *
+ */
 
 beforeEach(function () {
     // Create a test member with unique data to avoid conflicts
