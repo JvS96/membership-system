@@ -41,15 +41,15 @@ class Member extends Model
         $month = (int) substr($idNumber, 2, 2);
         $day = (int) substr($idNumber, 4, 2);
 
-        // Determine century (assuming current year is 2024)
+        // Determine century (assuming current year is 2025)
         $currentYear = (int) date('Y');
         $currentYearLastTwo = $currentYear % 100;
         $currentCentury = floor($currentYear / 100) * 100;
         $previousCentury = $currentCentury - 100;
 
         // If year is greater than current year's last two digits, it's from previous century
-        // For example: if current year is 2024 (24), and ID year is 25-99, it's 1925-1999
-        // If ID year is 00-24, it's 2000-2024
+        // For example: if current year is 2025 (25), and ID year is 26-99, it's 1926-1999
+        // If ID year is 00-25, it's 2000-2025
         if ($year > $currentYearLastTwo) {
             $fullYear = $previousCentury + $year;
         } else {
@@ -71,11 +71,11 @@ class Member extends Model
     }
 
     /**
-     * Validate South African ID number
+     * Validate South African ID number using correct SA ID checksum algorithm
      */
     public static function isValidSouthAfricanId($idNumber)
     {
-        // Handle null/empty values
+        // Handle null or empty input
         if (empty($idNumber)) {
             return false;
         }
@@ -85,6 +85,11 @@ class Member extends Model
 
         // Check if it's exactly 13 digits
         if (strlen($idNumber) !== 13) {
+            return false;
+        }
+
+        // Check if it's all numeric
+        if (!ctype_digit($idNumber)) {
             return false;
         }
 
@@ -112,20 +117,30 @@ class Member extends Model
             return false;
         }
 
-        // Apply Luhn algorithm for South African ID numbers
+        // Validate using correct South African ID checksum algorithm
         $sum = 0;
+
+        // Process first 12 digits
         for ($i = 0; $i < 12; $i++) {
             $digit = (int) $idNumber[$i];
-            if ($i % 2 === 1) { // Odd positions (1, 3, 5, 7, 9, 11) - 0-indexed
-                $digit *= 2;
-                if ($digit > 9) {
-                    $digit = $digit - 9;
+
+            if ($i % 2 === 0) {
+                // Odd positions (1st, 3rd, 5th, etc.) - add as is
+                $sum += $digit;
+            } else {
+                // Even positions (2nd, 4th, 6th, etc.) - double and handle overflow
+                $doubled = $digit * 2;
+                if ($doubled > 9) {
+                    $doubled = intval($doubled / 10) + ($doubled % 10);
                 }
+                $sum += $doubled;
             }
-            $sum += $digit;
         }
 
+        // Calculate check digit
         $checkDigit = (10 - ($sum % 10)) % 10;
+
+        // Compare with the actual check digit (13th digit)
         return $checkDigit == (int) $idNumber[12];
     }
 
@@ -165,10 +180,4 @@ class Member extends Model
     {
         return $query->where('cellphone', 'like', '%' . $cellphone . '%');
     }
-
-    public static function search($searchTerm)
-    {
-        return self::searchByIdOrMember($searchTerm);
-    }
-
 }
