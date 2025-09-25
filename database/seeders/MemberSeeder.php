@@ -14,7 +14,7 @@ class MemberSeeder extends Seeder
     public function run(): void
     {
         // Create some sample members for testing with valid SA ID numbers and cellphone numbers
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0001',
             'id_number' => '9001015009087',
             'first_name' => 'Sophia',
@@ -25,7 +25,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0002',
             'id_number' => '8506115009087',
             'first_name' => 'Liam',
@@ -36,7 +36,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0003',
             'id_number' => '9512314567082',
             'first_name' => 'Olivia',
@@ -47,7 +47,7 @@ class MemberSeeder extends Seeder
             'status' => 'inactive'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0004',
             'id_number' => '8002284567089',
             'first_name' => 'Noah',
@@ -58,7 +58,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0005',
             'id_number' => '7503154567081',
             'first_name' => 'Ava',
@@ -69,7 +69,7 @@ class MemberSeeder extends Seeder
             'status' => 'suspended'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0006',
             'id_number' => '9203105026094',
             'first_name' => 'Ethan',
@@ -80,7 +80,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0007',
             'id_number' => '8808154567086',
             'first_name' => 'Isabella',
@@ -91,7 +91,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0008',
             'id_number' => '9105225009083',
             'first_name' => 'Mason',
@@ -102,7 +102,7 @@ class MemberSeeder extends Seeder
             'status' => 'inactive'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0009',
             'id_number' => '9607084567088',
             'first_name' => 'Mia',
@@ -113,7 +113,7 @@ class MemberSeeder extends Seeder
             'status' => 'active'
         ]);
 
-        Member::create([
+        Member::updateOrCreate([
             'member_number' => 'MBR0010',
             'id_number' => '8712095009081',
             'first_name' => 'Alexander',
