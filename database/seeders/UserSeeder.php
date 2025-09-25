@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Create admin user for Filament access
-        User::create([
+        User::updateOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@test.com',
             'password' => Hash::make('password'),
